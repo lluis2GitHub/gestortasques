@@ -1,3 +1,6 @@
+import dj_database_url
+import os
+
 """
 Django settings for gestortasques project.
 
@@ -90,14 +93,11 @@ WSGI_APPLICATION = 'gestortasques.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gestortasques',
-        'USER': 'postgres',
-        'PASSWORD': 'fantastic',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
