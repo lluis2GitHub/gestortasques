@@ -1,0 +1,49 @@
+# Entorn virtual
+venv/
+ENV/
+env/
+.venv/
+
+# Fitxers de Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+
+# Migracions (opcional, però recomanat si no vols pujar-les)
+*/migrations/*
+!*/migrations/__init__.py
+
+# Configuració local
+*.env
+.env.*
+*.local
+settings_local.py
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Sistema operatiu
+.DS_Store
+Thumbs.db
+
+# Node / frontend (si algun dia tens JS)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Docker
+*.pid
