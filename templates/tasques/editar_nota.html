@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load form_filters %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+
+    <div class="card shadow-sm p-4 text-center" style="width: 420px;">
+
+        <h2 class="mb-3 text-danger">
+            <i class="bi bi-exclamation-triangle"></i> Editar tasca
+        </h2>
+
+
+        <form method="POST" class="mb-3">
+            {% csrf_token %}
+            {{ form.text|add_class:"form-control" }}
+            <button class="btn btn-primary mt-3 w-100"><i class="bi bi-save"></i> Guardar</button>
+        </form>
+
+        <a href="{% url 'tasques:editar_tasca' nota.tasca.id %}" class="btn btn-secondary w-100">
+            <i class="bi bi-arrow-left"></i> Cancel·lar
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}

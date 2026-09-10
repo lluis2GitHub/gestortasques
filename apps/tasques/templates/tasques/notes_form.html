@@ -1,0 +1,40 @@
+{% load form_filters %}
+<h4>Notes</h4>
+<!-- Afegir nova nota -->
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Afegir nova nota</label>
+        {{ nota_form.text|add_class:"form-control" }}
+    </div>
+    <button name="add_note" class="btn btn-secondary w-100">
+        <i class="bi bi-plus-circle"></i> Afegir nota
+    </button>
+</form>
+<!-- Llista de notes -->
+ <br>
+<div class="mb-3">
+    {% for nota in tasca.notes.all %}
+        <div class="border rounded p-2 mb-2">
+            <small class="text-muted">{{ nota.creat_el }}</small>
+            <p class="mb-0">{{ nota.text }}</p>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a href="{% url 'tasques:editar_nota' nota.id %}" class="btn btn-primary">
+                <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{% url 'tasques:eliminar_nota' nota.id %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i>
+            </a>
+            <a href="{% url 'tasques:afegir_document' nota.id %}" class="btn btn-secondary">
+                <i class="bi bi-paperclip"></i>
+            </a>
+            <a href="{% url 'tasques:documents_nota' nota.id %}" class="btn btn-info">
+                <i class="bi bi-folder2-open"></i>
+            </a>
+        </div>
+    {% empty %}
+        <p class="text-muted">Encara no hi ha notes.</p>
+
+    {% endfor %}
+</div>

@@ -1,0 +1,51 @@
+<div class="nota mb-3 p-3 border rounded">
+
+    <h5>{{ nota.titol }}</h5>
+    <p>{{ nota.text }}</p>
+
+    <!-- Botons d'accions -->
+    <div class="btn-group btn-group-sm mb-2">
+        <a href="{% url 'tasques:editar_nota' nota.id %}" class="btn btn-primary">
+            <i class="bi bi-pencil"></i>
+        </a>
+        <a href="{% url 'tasques:eliminar_nota' nota.id %}" class="btn btn-danger">
+            <i class="bi bi-trash"></i>
+        </a>
+    </div>
+
+    <!-- 📎 Documents adjunts -->
+    <div class="mt-2">
+        <strong>Documents:</strong>
+
+        {% if nota.documents.all %}
+            {% for doc in nota.documents.all %}
+                <p>Ruta: {{ doc.fitxer.url }}</p>
+                <div class="d-flex align-items-center mt-1">
+                    <a href="{{ doc.fitxer.url }}" target="_blank">
+                        <i class="bi bi-file-earmark"></i> {{ doc.nom }}
+                    </a>
+
+                    <a href="{% url 'tasques:eliminar_document' doc.id %}"
+                       class="btn btn-sm btn-danger ms-2">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No hi ha documents adjunts.</p>
+        {% endif %}
+    </div>
+
+    <!-- ➕ Formulari per afegir document -->
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        {% csrf_token %}
+        {{ form_document.as_p }}
+
+        <input type="hidden" name="nota_id" value="{{ nota.id }}">
+
+        <button type="submit" class="btn btn-secondary">
+            <i class="bi bi-paperclip"></i> Afegir document
+        </button>
+    </form>
+
+</div>

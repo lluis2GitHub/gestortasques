@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Documents de la nota {{ nota.id }}</h2>
+
+{% if documents %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Descripció</th>
+            <th>Fitxer</th>
+            <th>Accions</th>
+            <th>Ruta</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for doc in documents %}
+        <tr>
+            <td>{{ doc.nom }}</td>
+
+            <td>
+                {% if doc.descripcio %}
+                    {{ doc.descripcio }}
+                {% else %}
+                    <em>(sense descripció)</em>
+                {% endif %}
+            </td>
+
+            <td>
+                <a href="{{ doc.fitxer.url }}" target="_blank">Obrir</a>
+            </td>
+
+            <td>
+                <a href="{% url 'tasques:eliminar_document' doc.id %}">
+                    Esborrar
+                </a>
+            </td>
+            <td>{{ doc.fitxer.url }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>No hi ha documents associats a aquesta nota.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'tasques:editar_tasca' nota.tasca.id %}">Tornar a la tasca</a>
+
+{% endblock %}

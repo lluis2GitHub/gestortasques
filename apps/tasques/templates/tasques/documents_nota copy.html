@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Documents de la nota {{ nota.id }}</h2>
+
+{% if documents %}
+    <ul>
+        {% for doc in documents %}
+            <li>
+                <a href="{{ doc.fitxer.url }}">{{ doc.nom }}</a>
+                {% if doc.descripcio %}
+                    — {{ doc.descripcio }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hi ha documents associats a aquesta nota.</p>
+{% endif %}
+
+<a href="{% url 'tasques:editar_tasca' nota.tasca.id %}">Tornar a la tasca</a>
+
+{% endblock %}

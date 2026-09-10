@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Tasques del dia {{ day }}</h1>
+
+<div class="mb-3">
+    <a class="btn btn-secondary" href="?day={{ prev_day }}">← Dia anterior</a>
+    <a class="btn btn-secondary" href="?day={{ next_day }}">Dia següent →</a>
+</div>
+
+<ul>
+{% for event in events %}
+    <li>
+        <div class="event d-flex align-items-center gap-2">
+            {% if event.tasca %}
+                <div class="event-color-square"
+                    style="background-color: {{ event.tasca.estat.color }};">
+                </div>
+            {% else %}
+                <div style="
+                    width: 14px;
+                    height: 14px;
+                    background-color: #ccc;
+                    border-radius: 3px;
+                    border: 1px solid #999;
+                "></div>
+            {% endif %}
+            {% if event.tasca %}
+                <strong>{{ event.tasca.titol }}</strong>
+            {% else %}
+                <strong>{{ event.title }}</strong>
+            {% endif %}
+        </div>
+
+        {{ event.start }} → {{ event.end }}<br>
+        {{ event.description }}
+    </li>
+    {% empty %}
+    <li>No hi ha tasques aquest dia.</li>
+    {% endfor %}
+</ul>
+<hr class="my-3">
+
+<h5 class="mb-2">Llegenda d’estats</h5>
+
+<div class="d-flex flex-wrap gap-3">
+    {% for estat in estats %}
+        <div class="d-flex align-items-center gap-2">
+            <div style="
+                width: 14px;
+                height: 14px;
+                background-color: {{ estat.color }};
+                border-radius: 3px;
+                border: 1px solid #ccc;">
+            </div>
+            <span>{{ estat.nom }}</span>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

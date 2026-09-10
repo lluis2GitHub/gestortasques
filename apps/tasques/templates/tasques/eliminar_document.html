@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Eliminar document</h2>
+
+<p>Vols eliminar el document <strong>{{ document.nom }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'tasques:documents_nota' nota.id %}">Cancel·lar</a>
+</form>
+
+{% endblock %}

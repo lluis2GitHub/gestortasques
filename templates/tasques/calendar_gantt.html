@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Diagrama de Gantt</h1>
+
+<link rel="stylesheet" href="{% static 'gantt/frappe-gantt.css' %}">
+<script src="{% static 'gantt/frappe-gantt.min.js' %}"></script>
+
+<style>
+    #gantt {
+        height: 600px;
+        min-width: 1200px;
+    }
+    #gantt-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        position: relative;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 20px;
+    }
+</style>
+
+<div id="gantt-wrapper">
+    <div id="gantt"></div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const tasks = [
+        {% for e in events %}
+        {
+            id: "{{ e.id }}",
+            name: "{{ e.titol|escapejs }}",
+            start: "{{ e.start }}",
+            end: "{{ e.end }}",
+            progress: 100,
+            custom_class: "estat-{{ e.estat }}"
+        },
+        {% endfor %}
+    ];
+
+    new Gantt("#gantt", tasks, {
+        view_mode: 'Day'
+    });
+</script>
+
+<style>
+    .estat-1 .bar { fill: #ffc107; }
+    .estat-2 .bar { fill: #0dcaf0; }
+    .estat-3 .bar { fill: #dc3545; }
+    .estat-4 .bar { fill: #6c757d; }
+    .estat-5 .bar { fill: #198754; }
+</style>
+{% endblock %}

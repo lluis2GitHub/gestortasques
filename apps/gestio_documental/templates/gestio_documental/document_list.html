@@ -1,0 +1,12 @@
+<h2>Documents</h2>
+<a href="{% url 'gestio_documental:document_create' %}">Nou document</a>
+<ul>
+    {% for doc in documents %}
+        <li>
+            <a href="{% url 'gestio_documental:document_detail' doc.pk %}">
+                {{ doc.nom }}
+            </a>
+            — <a href="{{ doc.fitxer.url }}">Descarregar</a>
+        </li>
+    {% endfor %}
+</ul>

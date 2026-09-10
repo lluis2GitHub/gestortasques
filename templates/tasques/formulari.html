@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load form_filters %}
+{% block title %}
+    {% if mode == 'editar' %}
+        Editar tasca
+    {% else %}
+        Crear nova tasca
+    {% endif %}
+{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">
+        {% if mode == 'editar' %}
+            Editar tasca: {{ tasca.titol }}
+        {% else %}
+            Crear nova tasca
+        {% endif %}
+    </h1>
+    <div class="row">
+        <!-- Columna esquerra: formulari de la tasca -->
+        <div class="col-md-8">
+            <form method="POST" class="card p-4 shadow-sm">
+                {% csrf_token %}
+                <!-- Títol -->
+                <div class="mb-3">
+                    <label class="form-label">Títol</label>
+                    {{ form.titol|add_class:"form-control"  }}
+                </div>
+                <!-- Descripció -->
+                <div class="mb-3">
+                    <label class="form-label">Descripció</label>
+                    {{ form.descripcio|add_class:"form-control" }}
+                </div>
+                <!-- Completada -->
+                <div class="form-check mb-3">
+                    {{ form.completada|add_class:"form-check-input" }}
+                    <label class="form-check-label">Completada</label>
+                </div>
+                <!-- Dates -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Data inici</label>
+                        {{ form.data_inici|add_class:"form-control" }}
+                        <small class="text-muted">Format: any-mes-dia hora:minut</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Data fi prevista</label>
+                        {{ form.data_fi_prevista|add_class:"form-control" }}
+                        <small class="text-muted">Format: any-mes-dia hora:minut</small>
+                    </div>
+                </div>
+                <!-- Selects -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Prioritat</label>
+                        {{ form.prioritat|add_class:"form-select" }}
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Aplicació</label>
+                        {{ form.aplicacio|add_class:"form-select" }}
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Estat</label>
+                        {{ form.estat|add_class:"form-select" }}
+                    </div>
+                </div>
+                <!-- Botons -->
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        {% if mode == 'editar' %}
+                            <i class="bi bi-save"></i> Guardar canvis
+                        {% else %}
+                            <i class="bi bi-plus-circle"></i> Crear tasca
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'tasques:llista_tasques' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Tornar
+                    </a>
+                </div>
+            </form>
+        </div>
+            {% if debug %}
+                <div class="alert alert-warning mt-3">
+                    <h5>DEBUG FORMULARI</h5>
+
+                    <p><strong>Instance.data_inici:</strong> {{ tasca.data_inici }}</p>
+                    <p><strong>Instance.data_fi_prevista:</strong> {{ tasca.data_fi_prevista }}</p>
+
+                    <p><strong>Form.initial.data_inici:</strong> {{ form.initial.data_inici }}</p>
+                    <p><strong>Form.initial.data_fi_prevista:</strong> {{ form.initial.data_fi_prevista }}</p>
+
+                    <p><strong>Form.data_inici (valor del navegador):</strong> {{ form.data_inici.value }}</p>
+                    <p><strong>Form.data_fi_prevista (valor del navegador):</strong> {{ form.data_fi_prevista.value }}</p>
+
+                    <p><strong>POST:</strong> {{ request.POST }}</p>
+                </div>
+            {% endif %}
+        <!-- Columna dreta: notes -->
+        {% if mode == "editar" %}
+            <div class="col-md-4">
+                    {% include "tasques/notes_form.html" %}
+            </div>
+        {% endif %}
+    </div>
+</div>{% endblock %}

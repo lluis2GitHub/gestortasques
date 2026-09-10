@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load highlight %}
+
+{% block title %}Les meves tasques{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Les meves tasques</h1>
+        <a href="{% url 'tasques:crear_tasca' %}" class="btn btn-success d-flex align-items-center gap-1">
+            <i class="bi bi-plus-circle"></i> Crear nova tasca
+        </a>
+    </div>
+
+    <form method="GET" class="mb-3 d-flex" role="search">
+        <input type="text" name="q" class="form-control me-2"
+               placeholder="Cerca tasques..." value="{{ request.GET.q }}">
+        <button class="btn btn-outline-primary">Cercar</button>
+    </form>
+
+    {% if tasques %}
+        <div class="row fw-bold bg-dark text-white py-2 rounded">
+            {% for field, text in columnes %}
+                <div class="col">
+                    <a class="text-white text-decoration-none"
+                       href="?sort={{ field }}&dir={% if sort == field and direction == 'asc' %}desc{% else %}asc{% endif %}&q={{ request.GET.q }}">
+                        {{ text }}
+                        {% if sort == field %}
+                            {% if direction == 'asc' %}
+                                <i class="bi bi-arrow-up"></i>
+                            {% else %}
+                                <i class="bi bi-arrow-down"></i>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+            <div class="col">Accions</div>
+        </div>
+
+        {% for tasca in tasques %}
+            <div class="row py-2 border-bottom align-items-center">
+                <div class="col-auto">
+                    <div style="
+                        width: 18px;
+                        height: 18px;
+                        background-color: {{ tasca.estat.color }};
+                        border-radius: 4px;
+                        border: 1px solid #ccc;"></div>
+                </div>
+
+<!--                <span class="badge px-3 py-2 text-white fw-semibold"
+                    style="background-color: {{ tasca.estat.color }}; border-radius: 8px;">
+                    {{ tasca.estat.nom }}
+                </span>-->
+                <div class="col">{{ tasca.titol|highlight:query|safe }}</div>
+                <div class="col">{{ tasca.get_prioritat_display }}</div>
+                <div class="col">{{ tasca.aplicacio }}</div>
+                <div class="col">{{ tasca.data_inici|date:"Y-m-d H:i" }}</div>
+                <div class="col">{{ tasca.data_fi_prevista|date:"Y-m-d H:i" }}</div>
+                <div class="col">
+                    {% if tasca.completada %}
+                        <span class="badge bg-success">Sí</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </div>
+                <div class="col">
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'tasques:editar_tasca' tasca.id %}?q={{ request.GET.q }}"
+                           class="btn btn-primary me-2 d-flex align-items-center gap-1">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="{% url 'tasques:eliminar_tasca' tasca.id %}"
+                           class="btn btn-danger d-flex align-items-center gap-1">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <nav aria-label="Paginació" class="mt-4">
+            <ul class="pagination">
+                {% if tasques.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ tasques.previous_page_number }}&sort={{ sort }}&dir={{ direction }}&q={{ request.GET.q }}">
+                            Anterior
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        Pàgina {{ tasques.number }} de {{ tasques.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if tasques.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ tasques.next_page_number }}&sort={{ sort }}&dir={{ direction }}&q={{ request.GET.q }}">
+                            Següent
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Següent</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+    {% else %}
+        <p class="text-muted">No s'han trobat resultats per "{{ request.GET.q }}".</p>
+    {% endif %}
+        <hr class="my-4">
+
+    <h5 class="mb-3">Llegenda d’estats</h5>
+    <div class="d-flex flex-wrap gap-3">
+        {% for estat in estats %}
+            <div class="d-flex align-items-center gap-2">
+                <div style="
+                    width: 18px;
+                    height: 18px;
+                    background-color: {{ estat.color }};
+                    border-radius: 4px;
+                    border: 1px solid #ccc;
+                "></div>
+                <span>{{ estat.nom }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

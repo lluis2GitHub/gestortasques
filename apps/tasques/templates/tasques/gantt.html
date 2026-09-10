@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Diagrama de Gantt</h1>
+
+<style>
+    #gantt-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        border: 1px solid #ccc;
+        background: #f8f9fa;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+    .task-bar {
+        position: absolute;
+        height: 30px;
+        border-radius: 4px;
+        color: white;
+        padding-left: 5px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
+
+    .estat-1 { background: #ffc107; }
+    .estat-2 { background: #0dcaf0; }
+    .estat-3 { background: #dc3545; }
+    .estat-4 { background: #6c757d; }
+    .estat-5 { background: #198754; }
+</style>
+
+<div id="gantt-container"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const tasks = [
+        {% for e in events %}
+        {
+            id: "{{ e.id }}",
+            name: "{{ e.name|escapejs }}",
+            start: "{{ e.start }}",
+            end: "{{ e.end }}",
+            estat: "{{ e.estat }}"
+        },
+        {% endfor %}
+    ];
+
+    const container = document.getElementById("gantt-container");
+
+    const parseDate = d => new Date(d).getTime();
+    const minDate = Math.min(...tasks.map(t => parseDate(t.start)));
+    const pxPerDay = 20;
+
+    tasks.forEach((t, index) => {
+        const start = parseDate(t.start);
+        const end = parseDate(t.end);
+
+        const offsetDays = (start - minDate) / (1000 * 60 * 60 * 24);
+        const durationDays = (end - start) / (1000 * 60 * 60 * 24);
+
+        const bar = document.createElement("div");
+        bar.className = `task-bar estat-${t.estat}`;
+        bar.style.left = (offsetDays * pxPerDay) + "px";
+        bar.style.top = (index * 40) + "px";
+        bar.style.width = (durationDays * pxPerDay) + "px";
+        bar.textContent = t.name;
+
+        container.appendChild(bar);
+    });
+</script>
+{% endblock %}

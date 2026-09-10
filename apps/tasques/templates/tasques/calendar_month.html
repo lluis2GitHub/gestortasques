@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Calendari {{ month }}/{{ year }}</h1>
+
+<div class="mb-3 d-flex gap-2">
+    <a class="btn btn-secondary" href="?year={{ prev_year }}&month={{ prev_month }}">← Mes anterior</a>
+    <a class="btn btn-secondary" href="?year={{ next_year }}&month={{ next_month }}">Mes següent →</a>
+</div>
+
+<style>
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .day { border: 1px solid #ccc; min-height: 120px; padding: 6px; background: #fafafa; }
+    .day-header { font-weight: bold; margin-bottom: 4px; }
+
+    .event {
+        margin: 2px 0;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .event-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+    }
+
+    .legend { margin-top: 20px; }
+</style>
+
+<div class="calendar">
+    {% for weekday in weekdays %}
+        <div class="day"><div class="day-header">{{ weekday }}</div></div>
+    {% endfor %}
+
+    {% for day in days %}
+        <div class="day">
+            <div class="day-header">{{ day }}</div>
+
+            {% for event in events %}
+                {% if event.start.date <= day and event.end.date >= day %}
+                    <div class="event">
+
+                        {% if event.tasca %}
+                            <div class="event-color" style="background-color: {{ event.tasca.estat.color }};"></div>
+                        {% else %}
+                            <div class="event-color" style="background-color: #ccc;"></div>
+                        {% endif %}
+
+                        <div>
+                            {% if event.tasca %}
+                                <strong>{{ event.tasca.titol }}</strong>
+                            {% else %}
+                                <strong>{{ event.title }}</strong>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<hr class="my-3">
+
+<h5 class="mb-2">Llegenda d’estats</h5>
+
+<div class="d-flex flex-wrap gap-3">
+    {% for estat in estats %}
+        <div class="d-flex align-items-center gap-2">
+            <div class="event-color" style="background-color: {{ estat.color }};"></div>
+            <span>{{ estat.nom }}</span>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

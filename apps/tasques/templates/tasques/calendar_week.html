@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Setmana del {{ start }} al {{ end }}</h1>
+
+<div class="mb-3">
+    <a class="btn btn-secondary" href="?start={{ prev_start }}">← Setmana anterior</a>
+    <a class="btn btn-secondary" href="?start={{ next_start }}">Setmana següent →</a>
+</div>
+<div style="display: flex; gap: 10px;">
+    {% for day in days %}
+        <div style="flex: 1; border: 1px solid #ccc; padding: 8px; background: #fafafa;">
+            <strong>{{ day }}</strong>
+            <ul class="mt-2">
+                {% for event in events %}
+                    {% if event.start.date <= day and event.end.date >= day %}
+                        <li style="display: flex; align-items: center; gap: 6px;">
+
+                            {% if event.tasca %}
+                                <div style="
+                                    width: 12px;
+                                    height: 12px;
+                                    background-color: {{ event.tasca.estat.color }};
+                                    border-radius: 2px;
+                                "></div>
+                            {% else %}
+                                <div style="
+                                    width: 12px;
+                                    height: 12px;
+                                    background-color: #ccc;
+                                    border-radius: 2px;
+                                "></div>
+                            {% endif %}
+                            <div>
+                                {% if event.tasca %}
+                                    <strong>{{ event.tasca.titol }}</strong>
+                                {% else %}
+                                    <strong>{{ event.title }}</strong>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+<hr>
+<h3>Llegenda d'estats</h3>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    {% for estat in estats %}
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <div style="
+                width: 14px;
+                height: 14px;
+                background-color: {{ estat.color }};
+                border-radius: 2px;
+            "></div>
+            <span>{{ estat.nom }}</span>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
